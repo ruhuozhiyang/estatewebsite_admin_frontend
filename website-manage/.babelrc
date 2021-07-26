@@ -1,0 +1,26 @@
+{
+    //为了让开发者能够尽早用上新的JS特性，babel团队开发了babel-preset-latest。
+    //这个preset比较特殊，它是多个preset的集合(es2015+)，并且随着ECMA规范的更新更增加它的内容。
+    //babel官方推出了babel-preset-env插件。它可以根据开发者的配置，按需加载插件。
+    "presets": [
+        [
+            "env"
+            // {
+            //     "targets": {
+            //         "node": "8.9.3",
+            //         "browsers": [ "ie >= 8", "chrome >= 62" ]
+            //     }
+            // }
+        ]
+    ],
+    "plugins": [
+        "transform-runtime", "transform-vue-jsx",
+        [
+            "import",
+            {
+                "libraryName": "ant-design-vue",
+                "style": true
+            }
+        ]
+    ]
+}
