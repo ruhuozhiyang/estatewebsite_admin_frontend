@@ -3,11 +3,11 @@
         <a-layout :style="{ height: '800px' }">
 						<a-layout-sider v-model="collapsed" collapsible>
 							<div class="logo" />
-							<a-menu theme="dark" mode="inline" :selected-keys="currentMenu" @click="linkTo">
+							<a-menu theme="dark" mode="inline" :selectedKeys="[currentMenu]" @click="linkTo">
 								<a-menu-item v-for="item in menuData" :key="item.url">
-										<a-icon :type="item.icon" />
-										<span class="nav-text">{{item.item}}</span>
-									</a-menu-item>
+									<a-icon :type="item.icon" />
+									<span class="nav-text">{{item.item}}</span>
+								</a-menu-item>
 							</a-menu>
 						</a-layout-sider>
             <a-layout>
@@ -22,9 +22,9 @@
 													float: 'left',
 													border: 'none',
 											}"
-											v-model="current"
+											:selectedKeys="[current]"
                     >
-                        <a-menu-item v-for="item in childMenuData" :key="item.url">
+                        <a-menu-item v-for="item in childMenuData[currentMenu]" :key="item.url">
                             <a-icon :type="item.icon" />
                             <span class="nav-text">{{item.item}}</span>
                         </a-menu-item>
@@ -61,40 +61,50 @@
 export default {
     name: 'Root',
     data() {
-        return {
-            title: '宝云居房产网站后台管理',
-            childMenuData: [
-                {item: '出售房源', icon: 'home', url: '/estate-buy'},
-                {item: '出租房源', icon: 'home', url: '/estate-rent'},
-            ],
-						current: '/estate-buy',
-						collapsed: false,
-						menuData: [
-							{
-								url: '/estate-buy',
-								item: '房源管理',
-								icon: 'setting',
-							},
-						],
-						currentMenu: '/estate-buy',
-        };
+			return {
+				childMenuData: {
+					'/estate-buy': [
+						{item: '出售房源', icon: 'home', url: '/estate-buy'},
+						{item: '出租房源', icon: 'home', url: '/estate-rent'},
+					],
+					'/loc-manage': [
+						{item: '地点管理', icon: 'home', url: '/loc-manage'},
+					]
+				},
+				menuData: [
+					{
+						url: '/estate-buy',
+						item: '房源管理',
+						icon: 'setting',
+					},
+					{
+						url: '/loc-manage',
+						item: '地点管理',
+						icon: 'setting',
+					},
+				],
+				collapsed: false,
+				currentMenu: '/loc-manage',
+				current: '/loc-manage',
+			};
     },
     mounted() {
-				this.$router.push(this.current);
+			this.$router.push(this.current);
     },
     methods: {
-        childLinkTo(item) {
-            if (this.$route.path !== item.key) {
-                this.$router.push(item.key);
-								this.current = item.key;
-            }
-        },
-				linkTo(item) {
-					if (item.key !== this.currentMenu) {
-						this.$router.push(item.key);
-						this.currentMenu = item.key;
-					}
-				},
+			childLinkTo(item) {
+				if (this.$route.path !== item.key) {
+					this.$router.push(item.key);
+					this.current = item.key;
+				}
+			},
+			linkTo(item) {
+				if (item.key !== this.currentMenu) {
+					this.$router.push(item.key);
+					this.currentMenu = item.key;
+					this.current = item.key;
+				}
+			},
     },
 }
 </script>

@@ -99,15 +99,15 @@ export default {
         })
     	},
 			getHousesForSellList() {
-					axios.post(getHousesForSellApi, {}).then((res) => {
-							global.console.log(res);
-							if (res.data && res.data.success) {
-									const result = res.data.data;
-									this.data = result;
-							}
-					}).catch((err) => {
-							global.console.log(err);
-					});
+				axios.post(getHousesForSellApi, {}).then((res) => {
+					global.console.log(res);
+					if (res.data && res.data.success) {
+							const result = res.data.data;
+							this.data = result;
+					}
+				}).catch((err) => {
+					global.console.log(err);
+				});
 			},
 			addEstate() {
 					this.visible = true;
