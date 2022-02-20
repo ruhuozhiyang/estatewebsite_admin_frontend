@@ -74,8 +74,8 @@ module.exports={
     //     extensions: ['.js', '.jsx', '.vue'], // 模块导入可以省略后缀
     // },
     resolve: {
-        alias: {
-            vue: 'vue/dist/vue.js'
-        },
+			alias: {
+				vue: 'vue/dist/vue.js'
+			},
     },
 }

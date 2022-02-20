@@ -6,7 +6,7 @@
 							<a-menu theme="dark" mode="inline" :selectedKeys="[currentMenu]" @click="linkTo">
 								<a-menu-item v-for="item in menuData" :key="item.url">
 									<a-icon :type="item.icon" />
-									<span class="nav-text">{{item.item}}</span>
+									<span class="nav-text">{{ item.item }}</span>
 								</a-menu-item>
 							</a-menu>
 						</a-layout-sider>
@@ -84,8 +84,8 @@ export default {
 					},
 				],
 				collapsed: false,
-				currentMenu: '/loc-manage',
-				current: '/loc-manage',
+				currentMenu: '/estate-buy',
+				current: '/estate-buy',
 			};
     },
     mounted() {
