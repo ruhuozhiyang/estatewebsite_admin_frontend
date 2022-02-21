@@ -63,17 +63,20 @@ export default {
     data() {
 			return {
 				childMenuData: {
-					'/estate-buy': [
-						{item: '出售房源', icon: 'home', url: '/estate-buy'},
+					'/estate': [
+						{item: '出售房源', icon: 'home', url: '/estate'},
 						{item: '出租房源', icon: 'home', url: '/estate-rent'},
 					],
 					'/loc-manage': [
 						{item: '地点管理', icon: 'home', url: '/loc-manage'},
-					]
+					],
+					'/user-comment': [
+						{item: '用户留言', icon: 'home', url: '/user-comment'}
+					],
 				},
 				menuData: [
 					{
-						url: '/estate-buy',
+						url: '/estate',
 						item: '房源管理',
 						icon: 'setting',
 					},
@@ -99,8 +102,8 @@ export default {
 					},
 				],
 				collapsed: false,
-				currentMenu: '/estate-buy',
-				current: '/estate-buy',
+				currentMenu: '/estate',
+				current: '/estate',
 			};
     },
     mounted() {
