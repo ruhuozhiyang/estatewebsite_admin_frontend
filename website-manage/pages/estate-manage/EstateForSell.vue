@@ -12,16 +12,23 @@
 		>
 			<span slot="operation" slot-scope="o, r">
 				<a-upload
+					:before-upload="beforeUpload"
 					:data="{ 'id': r.id}"
 					action="/api/admin/upload_img"
 					list-type="picture-card"
 					:file-list="o || []"
 					@preview="handlePreview"
+					:remove="(f) => { handleRemove(f, r.id); }"
+					@change="(info) => { handleChange(info, r.id); }"
 				>
-					<div v-if="o && o.length < 5">
+					<div v-if="o && o.length < 2">
 						<a-icon type="plus" />
 					</div>
 				</a-upload>
+			</span>
+			<span v-for="(item, key) in ['price', 'place', 'area']" :key="key" :slot="item" slot-scope="o">
+				<span v-if="o === null || o === ''">--</span>
+				<span v-else>{{ o }}</span>
 			</span>
 		</a-table>
 		<a-modal title="新增房源" :visible="visible" :footer="null" width="50%" @cancel="visible = false;">
@@ -38,9 +45,9 @@ import axios from '../../config/axios';
 import AddHouse from '../../component/estateforsell/AddHouse.vue';
 
 const columns = [
-	{ title: '地理位置', dataIndex: 'place', key: 'place' },
-	{ title: '价格', dataIndex: 'price', key: 'price' },
-	{ title: '面积', dataIndex: 'area', key: 'area' },
+	{ title: '地理位置', dataIndex: 'place', key: 'place', scopedSlots: { customRender: 'place' } },
+	{ title: '价格', dataIndex: 'price', key: 'price', scopedSlots: { customRender: 'price' } },
+	{ title: '面积', dataIndex: 'area', key: 'area', scopedSlots: { customRender: 'area' } },
 	{ title: '卧室数', dataIndex: 'roomNum', key: 'roomNum' },
 	{ title: '客厅数', dataIndex: 'livingNum', key: 'livingRoom' },
 	{ title: '卫生间数', dataIndex: 'toiletNum', key: 'toiletRoom' },
@@ -48,6 +55,8 @@ const columns = [
 ];
 
 const getHousesForSellApi = '/api/admin/get-house-info';
+const deleteImgApi = '/api/admin/del-img';
+const restApi = 'http://localhost:8080';
 
 export default {
 	name: 'EstateForSell',
@@ -60,11 +69,10 @@ export default {
 			pagination: {
 				current: 1,
 				pageSize: 5,
-				total: 50,
+				total: 0,
 			},
 			previewVisible: false,
 			previewImage: '',
-			fileList: [],
 		};
 	},
 	mounted() {
@@ -101,7 +109,7 @@ export default {
 					uid: i,
           name: e.split("/").pop(),
           status: 'done',
-          url: 'http://localhost:8080' + e,
+          url: restApi + e,
 				});
 			});
 			return res;
@@ -113,8 +121,48 @@ export default {
 			if (file.url) {
 				this.previewImage = file.url;
 				this.previewVisible = true;
+			} else if (file.response && file.response.url) {
+				this.previewImage = restApi + file.response.url;
+				this.previewVisible = true;
 			}
 		},
+		handleChange({fileList}, id) {
+			this.data.forEach(ele => {
+				if (ele.id === id) {
+					ele.imgArray = fileList;
+				}
+			});
+		},
+		handleRemove(f, a) {
+			let url = '';
+			if (f.response && f.response.url) {
+				url = f.response.url;
+			} else if (f.url) {
+				url = f.url.replace(restApi, '');
+			}
+			const params = {
+				id: a,
+				p: url,
+			};
+			axios({ method: 'post', url: deleteImgApi, data: params }).then((res) => {
+				if (res.data.success) {
+					this.$message.success('删除成功！');
+				}
+			}).catch(() => {
+				this.$message.error('删除失败！');
+			});
+		},						
+		beforeUpload(file) {
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      if (!isJpgOrPng) {
+        this.$message.error('You can only upload JPG file!');
+      }
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$message.error('Image must smaller than 2MB!');
+      }
+      return isJpgOrPng && isLt2M;
+    },
 	},
 	components: {
 		AddHouse,
