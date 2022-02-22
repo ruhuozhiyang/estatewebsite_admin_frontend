@@ -70,6 +70,9 @@ export default {
 					'/loc-manage': [
 						{item: '地点管理', icon: 'home', url: '/loc-manage'},
 					],
+					'/agents': [
+						{item: '代理人信息', icon: 'home', url: '/agents'},
+					],
 					'/user-comment': [
 						{item: '用户留言', icon: 'home', url: '/user-comment'}
 					],

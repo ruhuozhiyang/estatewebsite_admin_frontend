@@ -26,10 +26,12 @@
 					</div>
 				</a-upload>
 			</span>
-			<span v-for="(item, key) in ['price', 'place', 'area']" :key="key" :slot="item" slot-scope="o">
-				<span v-if="o === null || o === ''">--</span>
-				<span v-else>{{ o }}</span>
-			</span>
+			<template v-for="(item, key) in ['price', 'place', 'area']">
+				<span :key="key" :slot="item" slot-scope="text">
+					<span v-if="text === null || text === ''">--</span>
+					<span v-else>{{ text }}</span>
+				</span>
+			</template>
 		</a-table>
 		<a-modal title="新增房源" :visible="visible" :footer="null" width="50%" @cancel="visible = false;">
 			<AddHouse />

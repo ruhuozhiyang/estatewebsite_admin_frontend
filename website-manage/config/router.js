@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import EstateForSell from '../pages/estate-manage/EstateForSell.vue';
 import LocForSearch from '../pages/loc-manage/LocForSearch.vue';
 import UserComments from '../pages/user-comments/UserComments.vue';
+import Agents from '../pages/agents/Agents.vue';
 
 const includPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -23,6 +24,10 @@ const routes = [
 	{
 		path: '/user-comment',
 		component: UserComments,
+	},
+	{
+		path: '/agents',
+		component: Agents,
 	},
 ];
 
