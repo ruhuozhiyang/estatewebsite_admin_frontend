@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import Root from './Root.vue';
 import Antd from 'ant-design-vue/es';
-import { message } from 'ant-design-vue/es';
+import { message, Form } from 'ant-design-vue/es';
 import 'ant-design-vue/dist/antd.css'
 import router from './config/router.js';
 
 Vue.use(Antd);
 Vue.prototype.$message = message;
+Vue.prototype.$form = Form;
 
 new Vue({
     router,

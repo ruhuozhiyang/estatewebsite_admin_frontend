@@ -13,7 +13,7 @@
 			<span slot="operation" slot-scope="o, r">
 				<a-upload
 					:before-upload="beforeUpload"
-					:data="{ 'id': r.id}"
+					:data="{ 'id': r.id, 'flag': 'house' }"
 					action="/api/admin/upload_img"
 					list-type="picture-card"
 					:file-list="o || []"
@@ -144,6 +144,7 @@ export default {
 			}
 			const params = {
 				id: a,
+				f: 'house',
 				p: url,
 			};
 			axios({ method: 'post', url: deleteImgApi, data: params }).then((res) => {
