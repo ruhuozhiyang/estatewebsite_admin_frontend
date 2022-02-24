@@ -9,6 +9,7 @@
 			:rowKey="(record, index) => index"
 			:loading="tableloading"
 			:pagination="pagination"
+			@change="tableChange"
 		>
 			<span slot="photos" slot-scope="o, r">
 				<a-upload
@@ -26,9 +27,12 @@
 					</div>
 				</a-upload>
 			</span>
+			<span slot="display" slot-scope="o">
+				{{ o === '1' ? '是' : '否' }}
+			</span>
 		</a-table>
 		<a-modal title="添加代理人" :visible="visible" :footer="null" width="50%" @cancel="visible = false;">
-			<AddAgents />
+			<AddAgents @refresh="refresh" />
 		</a-modal>
 		<a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
 			<img alt="图片资源获取失败!" style="width: 100%" :src="previewImage" />
@@ -37,7 +41,7 @@
 </template>
 
 <script>
-import axios from 'Axios';
+import axios from '../../config/axios';
 import AddAgents from '../../component/agents/AddAgents.vue';
 
 const columns = [
@@ -47,6 +51,7 @@ const columns = [
 	{ title: '移动电话', dataIndex: 'mobile', key: 'mobile' },
 	{ title: '职位', dataIndex: 'position', key: 'position' },
 	{ title: '个人介绍', dataIndex: 'details', key: 'details' },
+	{ title: '首页展示', dataIndex: 'display', key: 'display', scopedSlots: { customRender: 'display' } },
 	{ title: '照片', dataIndex: 'photos', key: 'photos', scopedSlots: { customRender: 'photos' } },
 ];
 const getAllAgentsApi = '/api/admin/get-all-agents';
@@ -74,11 +79,24 @@ export default {
 		this.getAllAgents();
 	},
 	methods: {
+		tableChange(pagination) {
+			console.log(pagination);
+			this.pagination.current = pagination.current;
+			this.getAllAgents();
+		},
+		refresh() {
+			this.visible = false;
+			this.getAllAgents();
+		},
 		getAllAgents() {
 			this.tableloading = true;
-			axios.get(getAllAgentsApi).then((res) => {
+			const params = {
+				l: (this.pagination.current - 1) * this.pagination.pageSize,
+				r: this.pagination.pageSize,
+			};
+			axios.get(getAllAgentsApi, { params }).then((res) => {
 				if (res.data && res.data.success) {
-					const result = res.data.data;
+					const result = res.data.data.content || [];
 					if (Array.isArray(result) && result.length > 0) {
 						result.forEach(ele => {
 							if (ele.photos) {
@@ -87,6 +105,7 @@ export default {
 						});
 					}
 					this.data = result;
+					this.pagination.total = res.data.data.total;
 					this.tableloading = false;
 				}
 			}).catch(() => {

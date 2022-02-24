@@ -13,6 +13,24 @@
 					/>
 				</a-form-item>
 			</template>
+			<a-form-item label="是否首页展示">
+				<a-select
+					v-decorator="[
+						'display',
+						{
+							rules: [{ required: true, message: '请选择!' }],
+							initialValue: '0',
+						}
+					]"
+				>
+					<a-select-option value="0">
+						否
+					</a-select-option>
+					<a-select-option value="1">
+						是
+					</a-select-option>
+				</a-select>
+			</a-form-item>
 		</a-form>
 		<div style="textAlign: center;">
 			<a-button type="primary" @click="addAgents">确定</a-button>
@@ -73,8 +91,11 @@ export default {
 			this.form.validateFields().then((res) => {
 				const params = res;
 				axios.post(addAgentsApi, params).then((r) => {
-					console.log(r);
-				}).catch(() => {});
+					if (r.data.success && r.data.data) {
+						this.$message.success('添加代理人成功!');
+						this.$emit('refresh');
+					}
+				}).catch(() => {}); 
 			}).catch(() => {});
 		},
 	},
